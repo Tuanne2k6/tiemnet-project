@@ -37,7 +37,7 @@ test.describe('E2E - Luồng khách hàng (tài khoản do nhân viên/admin t�
     await page.getByRole('button', { name: /Đăng nhập/i }).click()
 
     await page.waitForURL('**/my-account')
-    await expect(page.getByText('Tài khoản của tôi')).toBeVisible()
+    await expect(page.getByRole('heading', { name: /Tài khoản của tôi/ })).toBeVisible()
 
     // Khách hàng KHÔNG được thấy menu quản trị
     await expect(page.getByRole('link', { name: 'Sơ đồ máy' })).not.toBeVisible()
@@ -52,7 +52,7 @@ test.describe('E2E - Luồng khách hàng (tài khoản do nhân viên/admin t�
     await page.waitForURL('**/my-account')
 
     await page.getByLabel('Mật khẩu hiện tại').fill(password)
-    await page.getByLabel('Mật khẩu mới').fill('NewPassw0rd1')
+    await page.getByLabel('Mật khẩu mới', { exact: true }).fill('NewPassw0rd1')
     await page.getByLabel('Nhập lại mật khẩu mới').fill('NewPassw0rd1')
     await page.getByRole('button', { name: 'Cập nhật mật khẩu' }).click()
 

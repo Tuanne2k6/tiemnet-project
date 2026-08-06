@@ -87,17 +87,17 @@ jobs:
       - name: Checkout mã nguồn
         uses: actions/checkout@v4
 
+      - name: Cài đặt Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
       - name: Khởi động toàn bộ hệ thống bằng Docker Compose
         run: docker compose up --build -d
 
       - name: Chờ Backend & Frontend sẵn sàng
         run: |
-          npx wait-on http://localhost:8000/docs http://localhost:5173 --timeout 120000
-
-      - name: Cài đặt Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
+          npx --yes wait-on http://localhost:8000/docs http://localhost:5173 --timeout 120000
 
       - name: Cài đặt Playwright
         working-directory: ./e2e

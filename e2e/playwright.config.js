@@ -10,6 +10,11 @@ module.exports = defineConfig({
   testDir: './tests',
   timeout: 30 * 1000,
   fullyParallel: false, // chạy tuần tự vì các test dùng chung 1 database
+  // QUAN TRỌNG: chỉ dùng 1 worker (không chạy song song nhiều file/describe).
+  // Nhiều luồng test cùng gọi API đăng nhập/tạo tài khoản gần như đồng thời
+  // sẽ dễ vượt rate limit chống brute-force (10 lần/phút, xem app/limiter.py),
+  // khiến test fail do lỗi 429 chứ không phải do lỗi ứng dụng.
+  workers: 1,
   retries: 0,
   reporter: 'html',
   use: {
