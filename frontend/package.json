@@ -1,0 +1,33 @@
+{
+  "name": "tiemnet-frontend",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.24.0",
+    "axios": "^1.7.2",
+    "bootstrap": "^5.3.3",
+    "react-bootstrap": "^2.10.2",
+    "react-icons": "^5.2.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.1",
+    "vite": "^5.3.1",
+    "vitest": "^1.6.0",
+    "jsdom": "^24.1.0",
+    "@testing-library/react": "^16.0.0",
+    "@testing-library/jest-dom": "^6.4.6",
+    "@testing-library/user-event": "^14.5.2",
+    "@vitest/coverage-v8": "^1.6.0"
+  }
+}

@@ -1,0 +1,50 @@
+version: "3.9"
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: tiemnet-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: tiemnet_db
+    ports:
+      - "3307:3306"   # map ra 3307 để không đụng MySQL của XAMPP (nếu vẫn đang chạy)
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+    container_name: tiemnet-backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: mysql+pymysql://root:root@db:3306/tiemnet_db
+      JWT_SECRET_KEY: doi-chuoi-bi-mat-nay-truoc-khi-deploy-that
+      ACCESS_TOKEN_EXPIRE_MINUTES: 120
+      CORS_ORIGINS: http://localhost:5173,http://127.0.0.1:5173
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_BASE_URL: http://localhost:8000
+    container_name: tiemnet-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data:
