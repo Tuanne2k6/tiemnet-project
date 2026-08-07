@@ -80,7 +80,7 @@ jobs:
   # ---------------- JOB 4: End-to-End Test (Playwright) ----------------
   e2e-test:
     name: E2E Test (Playwright)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: [docker-build]
 
     steps:
@@ -95,6 +95,10 @@ jobs:
       - name: Khởi động toàn bộ hệ thống bằng Docker Compose
         run: docker compose up --build -d
 
+      - name: Kiểm tra container có chạy đúng không (debug khi lỗi)
+        if: always()
+        run: docker compose ps
+
       - name: Chờ Backend & Frontend sẵn sàng
         run: |
           npx --yes wait-on http://localhost:8000/docs http://localhost:5173 --timeout 120000
@@ -102,12 +106,21 @@ jobs:
       - name: Cài đặt Playwright
         working-directory: ./e2e
         run: |
+          set -euxo pipefail
           npm install
-          npx playwright install --with-deps chromium
+          chmod +x node_modules/.bin/* 2>/dev/null || true
+          node node_modules/@playwright/test/cli.js --version
+          node node_modules/@playwright/test/cli.js install --with-deps chromium
 
       - name: Chạy E2E Test
         working-directory: ./e2e
-        run: npm test
+        run: |
+          set -euxo pipefail
+          node node_modules/@playwright/test/cli.js test
+
+      - name: In log container nếu bước trên lỗi
+        if: failure()
+        run: docker compose logs
 
       - name: Lưu báo cáo E2E (kể cả khi fail, để xem log lỗi)
         if: always()
