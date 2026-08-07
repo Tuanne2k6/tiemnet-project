@@ -60,9 +60,12 @@ test.describe('E2E - Luồng khách hàng (tài khoản do nhân viên/admin t�
   })
 
   test('Khách hàng bị chuyển hướng nếu cố truy cập thẳng URL quản trị', async ({ page }) => {
+    // Lưu ý: test này chạy SAU test "đổi mật khẩu" ở trên (cùng file, workers: 1
+    // nên chạy tuần tự) -> mật khẩu của tài khoản lúc này đã là mật khẩu MỚI,
+    // không còn là `password` ban đầu nữa.
     await page.goto('/login')
     await page.getByLabel('Tên đăng nhập').fill(username)
-    await page.getByLabel('Mật khẩu').fill(password)
+    await page.getByLabel('Mật khẩu').fill('NewPassw0rd1')
     await page.getByRole('button', { name: /Đăng nhập/i }).click()
     await page.waitForURL('**/my-account')
 
@@ -75,6 +78,11 @@ test.describe('E2E - Luồng quản trị: bảng giá -> máy -> phiên chơi -
   const username = `e2e_admin_${runId}`
   const password = 'Passw0rd123'
   const computerCode = `E2E${runId.toString().slice(-6)}`
+  // Đặt tên bảng giá DUY NHẤT theo từng lần chạy: DB không được reset giữa các
+  // lần chạy test (dùng chung DB dev/CI), nếu để tên cố định "Gio E2E Test" thì
+  // sau vài lần chạy sẽ có nhiều dòng trùng tên trong bảng, khiến
+  // getByText('Gio E2E Test') khớp nhiều phần tử (strict mode violation).
+  const planName = `Gio E2E Test ${runId}`
 
   test.beforeAll(async ({ request }) => {
     const seedAdminToken = await apiLogin(request, SEED_ADMIN_USERNAME, SEED_ADMIN_PASSWORD)
@@ -92,18 +100,29 @@ test.describe('E2E - Luồng quản trị: bảng giá -> máy -> phiên chơi -
     await page.waitForURL('**/dashboard')
 
     // ---- Bước 1: Tạo bảng giá ----
-    await page.getByRole('link', { name: 'Bảng giá' }).click()
+    // Dùng locator scoped trong <nav>: trang Dashboard cũng có thẻ rút gọn
+    // "Sơ đồ máy" / "Bảng giá" trùng tên với menu, nếu không scope sẽ bị
+    // Playwright báo "strict mode violation" vì khớp 2 phần tử.
+    await page.locator('nav').getByRole('link', { name: 'Bảng giá' }).click()
     await page.getByRole('button', { name: '+ Thêm bảng giá' }).click()
-    await page.getByPlaceholder('VD: Giờ thường, Giờ VIP, Gói qua đêm...').fill('Gio E2E Test')
+    await page.getByPlaceholder('VD: Giờ thường, Giờ VIP, Gói qua đêm...').fill(planName)
     await page.getByPlaceholder('VD: 6000').fill('10000')
     await page.getByRole('button', { name: 'Lưu bảng giá' }).click()
-    await expect(page.getByText('Gio E2E Test')).toBeVisible()
+    await expect(page.getByText(planName)).toBeVisible()
 
     // ---- Bước 2: Thêm máy ----
-    await page.getByRole('link', { name: 'Sơ đồ máy' }).click()
+    await page.locator('nav').getByRole('link', { name: 'Sơ đồ máy' }).click()
     await page.getByRole('button', { name: '+ Thêm máy' }).click()
     await page.getByPlaceholder('VD: PC01').fill(computerCode)
-    await page.getByLabel('Bảng giá áp dụng').selectOption({ label: /Gio E2E Test/ })
+    // Lưu ý: selectOption({ label }) của Playwright chỉ nhận CHUỖI khớp CHÍNH XÁC,
+    // không hỗ trợ regex. Vì <option> hiển thị kèm giá (VD: "Gio E2E Test 123 (10.000đ/giờ)")
+    // nên không thể biết trước label đầy đủ -> tìm option theo text chứa tên bảng giá,
+    // lấy value thật của nó rồi mới selectOption theo value.
+    const billingSelect = page.getByLabel('Bảng giá áp dụng')
+    const planOptionValue = await billingSelect
+      .locator('option', { hasText: planName })
+      .getAttribute('value')
+    await billingSelect.selectOption(planOptionValue)
     await page.getByRole('button', { name: 'Lưu' }).click()
     await expect(page.getByText(computerCode)).toBeVisible()
 

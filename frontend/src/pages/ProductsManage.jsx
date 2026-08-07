@@ -91,7 +91,7 @@ export default function ProductsManage() {
             <tr key={p.id}>
               <td>{p.name}</td>
               <td>{p.category}</td>
-              <td>{p.price.toLocaleString()}đ</td>
+              <td>{p.price.toLocaleString('vi-VN')}đ</td>
               <td>
                 <Badge bg={p.stock_quantity > 5 ? 'success' : p.stock_quantity > 0 ? 'warning' : 'danger'}>
                   {p.stock_quantity}

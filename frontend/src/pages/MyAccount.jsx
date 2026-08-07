@@ -60,13 +60,13 @@ export default function MyAccount() {
         <Col md={4}>
           <Card className="card-stat text-center" style={{ background: 'linear-gradient(135deg, #4f46e5, #6366f1)', color: '#fff' }}>
             <small style={{ opacity: 0.85 }}>Số dư tài khoản</small>
-            <h4>{balance.toLocaleString()}đ</h4>
+            <h4>{balance.toLocaleString('vi-VN')}đ</h4>
           </Card>
         </Col>
         <Col md={4}>
           <Card className="card-stat text-center">
             <small className="text-muted">Tổng đã chi cho giờ chơi</small>
-            <h4>{totalSpent.toLocaleString()}đ</h4>
+            <h4>{totalSpent.toLocaleString('vi-VN')}đ</h4>
           </Card>
         </Col>
       </Row>
@@ -126,7 +126,7 @@ export default function MyAccount() {
                     <td>{new Date(s.start_time).toLocaleString('vi-VN')}</td>
                     <td>{s.end_time ? new Date(s.end_time).toLocaleString('vi-VN') : '-'}</td>
                     <td><Badge bg={s.status === 'active' ? 'warning' : 'success'}>{s.status}</Badge></td>
-                    <td>{s.total_amount.toLocaleString()}đ</td>
+                    <td>{s.total_amount.toLocaleString('vi-VN')}đ</td>
                   </tr>
                 ))}
                 {sessions.length === 0 && (

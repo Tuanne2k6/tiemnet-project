@@ -57,7 +57,7 @@ export default function ComputerBoard() {
     try {
       const res = await api.post(`/api/sessions/${session.id}/stop`)
       setError('')
-      alert(`Đã kết thúc phiên. Thành tiền: ${res.data.total_amount.toLocaleString()}đ`)
+      alert(`Đã kết thúc phiên. Thành tiền: ${res.data.total_amount.toLocaleString('vi-VN')}đ`)
       loadData()
     } catch (err) {
       setError(err.response?.data?.detail || 'Không thể kết thúc phiên chơi')
@@ -169,7 +169,7 @@ export default function ComputerBoard() {
             >
               <option value="">-- Chọn bảng giá --</option>
               {plans.map((p) => (
-                <option key={p.id} value={p.id}>{p.name} ({p.price_per_hour.toLocaleString()}đ/giờ)</option>
+                <option key={p.id} value={p.id}>{p.name} ({p.price_per_hour.toLocaleString('vi-VN')}đ/giờ)</option>
               ))}
             </Form.Select>
           </Form.Group>

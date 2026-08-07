@@ -43,19 +43,19 @@ export default function Reports() {
           <Col md={3}>
             <Card className="card-stat text-center">
               <small className="text-muted">Doanh thu giờ chơi</small>
-              <h4>{report.total_session_revenue.toLocaleString()}đ</h4>
+              <h4>{report.total_session_revenue.toLocaleString('vi-VN')}đ</h4>
             </Card>
           </Col>
           <Col md={3}>
             <Card className="card-stat text-center">
               <small className="text-muted">Doanh thu POS</small>
-              <h4>{report.total_product_revenue.toLocaleString()}đ</h4>
+              <h4>{report.total_product_revenue.toLocaleString('vi-VN')}đ</h4>
             </Card>
           </Col>
           <Col md={3}>
             <Card className="card-stat text-center">
               <small className="text-muted">Tổng doanh thu</small>
-              <h4 className="text-success">{report.total_revenue.toLocaleString()}đ</h4>
+              <h4 className="text-success">{report.total_revenue.toLocaleString('vi-VN')}đ</h4>
             </Card>
           </Col>
           <Col md={3}>
@@ -77,7 +77,7 @@ export default function Reports() {
                 <tr key={u.computer_code}>
                   <td>{u.computer_code}</td>
                   <td>{u.total_sessions}</td>
-                  <td>{u.total_revenue.toLocaleString()}đ</td>
+                  <td>{u.total_revenue.toLocaleString('vi-VN')}đ</td>
                 </tr>
               ))}
             </tbody>

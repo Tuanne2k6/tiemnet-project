@@ -35,7 +35,15 @@ export default function Accounts() {
     e.preventDefault()
     setCreateError(''); setCreateSuccess('')
     try {
-      await api.post('/api/auth/register', form)
+      // Backend dùng Optional[EmailStr]/Optional[str]: chuỗi rỗng "" KHÔNG phải
+      // giá trị hợp lệ cho email (Pydantic EmailStr từ chối ""), phải bỏ hẳn field
+      // nếu người dùng không nhập, không được gửi chuỗi rỗng lên.
+      const payload = {
+        ...form,
+        email: form.email.trim() ? form.email.trim() : undefined,
+        phone: form.phone.trim() ? form.phone.trim() : undefined,
+      }
+      await api.post('/api/auth/register', payload)
       setCreateSuccess(
         form.role === 'staff'
           ? `Đã tạo tài khoản nhân viên "${form.username}" thành công!`
@@ -153,7 +161,7 @@ export default function Accounts() {
                     <td>{c.full_name || '-'}</td>
                     <td>
                       <Badge bg={c.balance > 0 ? 'success' : 'secondary'}>
-                        {c.balance.toLocaleString()}đ
+                        {c.balance.toLocaleString('vi-VN')}đ
                       </Badge>
                     </td>
                     <td>
@@ -179,7 +187,7 @@ export default function Accounts() {
         </Modal.Header>
         <Modal.Body>
           {topUpError && <Alert variant="danger">{topUpError}</Alert>}
-          <p>Số dư hiện tại: <strong>{topUpTarget?.balance.toLocaleString()}đ</strong></p>
+          <p>Số dư hiện tại: <strong>{topUpTarget?.balance.toLocaleString('vi-VN')}đ</strong></p>
           <Form.Group controlId="topup-amount">
             <Form.Label>Số tiền nạp (VNĐ)</Form.Label>
             <Form.Control

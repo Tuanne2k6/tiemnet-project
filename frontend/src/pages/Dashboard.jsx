@@ -85,19 +85,19 @@ export default function Dashboard() {
         <Col md={4}>
           <Card className="card-stat text-center">
             <small className="text-muted">Doanh thu giờ chơi hôm nay</small>
-            <h3 className="text-primary">{revenue.total_session_revenue.toLocaleString()}đ</h3>
+            <h3 className="text-primary">{revenue.total_session_revenue.toLocaleString('vi-VN')}đ</h3>
           </Card>
         </Col>
         <Col md={4}>
           <Card className="card-stat text-center">
             <small className="text-muted">Doanh thu POS hôm nay</small>
-            <h3 className="text-primary">{revenue.total_product_revenue.toLocaleString()}đ</h3>
+            <h3 className="text-primary">{revenue.total_product_revenue.toLocaleString('vi-VN')}đ</h3>
           </Card>
         </Col>
         <Col md={4}>
           <Card className="card-stat text-center" style={{ background: 'linear-gradient(135deg, #4f46e5, #6366f1)', color: '#fff' }}>
             <small style={{ opacity: 0.85 }}>Tổng doanh thu hôm nay</small>
-            <h3>{revenue.total_revenue.toLocaleString()}đ</h3>
+            <h3>{revenue.total_revenue.toLocaleString('vi-VN')}đ</h3>
           </Card>
         </Col>
       </Row>

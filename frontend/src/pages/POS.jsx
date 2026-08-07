@@ -37,7 +37,7 @@ export default function POS() {
       const res = await api.post('/api/orders/', {
         items: cart.map((i) => ({ product_id: i.product.id, quantity: i.quantity })),
       })
-      setMessage(`✅ Thanh toán thành công! Tổng: ${res.data.total_amount.toLocaleString()}đ`)
+      setMessage(`✅ Thanh toán thành công! Tổng: ${res.data.total_amount.toLocaleString('vi-VN')}đ`)
       setCart([])
       const refreshed = await api.get('/api/products/')
       setProducts(refreshed.data)
@@ -61,7 +61,7 @@ export default function POS() {
                     <Card.Title style={{ fontSize: '1rem' }}>{p.name}</Card.Title>
                     <Card.Text className="text-muted small">{p.category}</Card.Text>
                     <div className="d-flex justify-content-between">
-                      <strong>{p.price.toLocaleString()}đ</strong>
+                      <strong>{p.price.toLocaleString('vi-VN')}đ</strong>
                       <Badge bg={p.stock_quantity > 0 ? 'success' : 'danger'}>
                         Tồn: {p.stock_quantity}
                       </Badge>
@@ -80,7 +80,7 @@ export default function POS() {
                 <ListGroup.Item key={i.product.id} className="d-flex justify-content-between align-items-center">
                   <span>{i.product.name} x{i.quantity}</span>
                   <div>
-                    <strong className="me-2">{(i.product.price * i.quantity).toLocaleString()}đ</strong>
+                    <strong className="me-2">{(i.product.price * i.quantity).toLocaleString('vi-VN')}đ</strong>
                     <Button size="sm" variant="outline-danger" onClick={() => removeFromCart(i.product.id)}>x</Button>
                   </div>
                 </ListGroup.Item>
@@ -90,7 +90,7 @@ export default function POS() {
             <hr />
             <div className="d-flex justify-content-between mb-3">
               <strong>Tổng cộng</strong>
-              <strong>{total.toLocaleString()}đ</strong>
+              <strong>{total.toLocaleString('vi-VN')}đ</strong>
             </div>
             <Button className="btn-brand w-100" onClick={handleCheckout} disabled={cart.length === 0}>
               Thanh toán

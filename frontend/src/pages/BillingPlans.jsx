@@ -64,7 +64,7 @@ export default function BillingPlans() {
           {plans.map((p) => (
             <tr key={p.id}>
               <td>{p.name}</td>
-              <td>{p.price_per_hour.toLocaleString()}đ</td>
+              <td>{p.price_per_hour.toLocaleString('vi-VN')}đ</td>
               <td>{p.description || '-'}</td>
               <td><Badge bg={p.is_active ? 'success' : 'secondary'}>{p.is_active ? 'Đang dùng' : 'Ngừng dùng'}</Badge></td>
               <td>
